@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' https://unpkg.com https://www.gstatic.com https://www.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://*.googleapis.com https://*.googleusercontent.com https://firebasestorage.googleapis.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.cloudfunctions.net https://firebasestorage.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self';">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="robots" content="noindex, nofollow">
+
+    <title>Admin Panel — ArtKing47</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23d62839'/><stop offset='100%25' stop-color='%23e63946'/></linearGradient></defs><rect x='10' y='10' width='80' height='80' rx='15' fill='url(%23g)'/></svg>">
+    <style>
+        /* ---- Admin Panel Styles ---- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0a0a0f;
+            --bg-card: #111118;
+            --bg-input: #16161f;
+            --border: #222230;
+            --border-focus: #d62839;
+            --accent: #d62839;
+            --accent-secondary: #e63946;
+            --text: #f1f1f3;
+            --text-secondary: rgba(241, 241, 243, 0.55);
+            --text-muted: rgba(241, 241, 243, 0.3);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Layout */
+        .admin-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--bg-card);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-logo {
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-logo h1 {
+            font-size: 1.1rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-logo h1 span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+        }
+
+        .sidebar-logo p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 0.5rem 0.75rem;
+        }
+
+        .sidebar-nav button {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.7rem 1rem;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .sidebar-nav button:hover {
+            background: rgba(230, 57, 70, 0.08);
+            color: var(--text);
+        }
+
+        .sidebar-nav button.active {
+            background: rgba(214, 40, 57, 0.15);
+            color: var(--accent);
+            border-left: 3px solid var(--accent);
+        }
+
+        .sidebar-nav button svg,
+        .sidebar-nav button i {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .sidebar-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .sidebar-footer a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .sidebar-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem 2.5rem;
+            max-width: 900px;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-header h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+        }
+
+        .page-header p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Sections (tabs) */
+        .admin-section {
+            display: none;
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .card-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-title .badge {
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            border-radius: 50px;
+            background: rgba(230, 57, 70, 0.15);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Form Elements */
+        label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="url"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text);
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: border-color 0.2s ease;
+            outline: none;
+            margin-bottom: 1rem;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: var(--border-focus);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            padding: 0.65rem 1.25rem;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-input);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.25);
+        }
+
+        .btn-success {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+
+        .btn-sm {
+            padding: 0.45rem 0.85rem;
+            font-size: 0.8rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+
+        /* Image Upload */
+        .image-upload-zone {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-upload-zone:hover {
+            border-color: var(--accent);
+        }
+
+        .image-upload-zone input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .image-upload-zone p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .image-upload-zone .upload-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .image-preview {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: var(--radius-sm);
+            margin-bottom: 0.75rem;
+        }
+
+        /* Portfolio/Slide Items */
+        .item-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            margin-bottom: 0.75rem;
+            position: relative;
+        }
+
+        .item-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .item-card-header h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .item-card-header h4 .num {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(230, 57, 70, 0.15);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+        }
+
+        .item-thumb {
+            width: 80px;
+            height: 60px;
+            border-radius: 6px;
+            object-fit: cover;
+            border: 1px solid var(--border);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--success);
+            color: #fff;
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 0.9rem;
+            z-index: 10000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Save Bar */
+        .save-bar {
+            position: fixed;
+            bottom: 0;
+            left: 260px;
+            right: 0;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            padding: 1rem 2.5rem;
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            z-index: 100;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                z-index: 999;
+                width: 260px;
+                transition: left 0.3s ease;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .main-content {
+                padding: 1.5rem;
+            }
+
+            .save-bar {
+                left: 0;
+            }
+
+            .mobile-toggle {
+                display: flex !important;
+                position: fixed;
+                top: 1rem;
+                left: 1rem;
+                z-index: 1000;
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                border-radius: var(--radius-sm);
+                padding: 0.5rem;
+                cursor: pointer;
+                color: var(--text);
+            }
+
+            .form-row,
+            .form-row-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ---- Portfolio Gallery Admin ---- */
+        .portfolio-gallery-admin {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .gallery-thumb {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .gallery-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-thumb-remove {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--danger);
+            color: #fff;
+            border: none;
+            font-size: 0.7rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .gallery-thumb:hover .gallery-thumb-remove {
+            opacity: 1;
+        }
+
+        /* ---- Login Gate ---- */
+        .login-gate {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-gate.hidden {
+            display: none;
+        }
+
+        .login-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-box h2 {
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+        }
+
+        .login-box p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            font-family: inherit;
+        }
+
+        .login-box input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .login-error {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .login-error.visible {
+            display: block;
+        }
+
+        .admin-locked {
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .admin-unlocked .admin-locked {
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.02);
+            }
+        }
+
+        .admin-section.active {
+            animation: fadeInUp 0.35s ease-out;
+        }
+
+        .sidebar-nav button {
+            transition: all 0.25s ease;
+        }
+
+        .sidebar-nav button:hover {
+            transform: translateX(4px);
+        }
+
+        .card {
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(214, 40, 57, 0.3);
+            box-shadow: 0 4px 20px rgba(214, 40, 57, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .item-card {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .btn {
+            transition: all 0.25s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .login-box {
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        .sidebar {
+            animation: slideInLeft 0.3s ease-out;
+        }
+
+        /* Venezuela timezone display */
+        .timezone-display {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .timezone-display .time {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Dashboard */
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .dash-stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .dash-stat-card:hover {
+            border-color: var(--accent);
+        }
+
+        .dash-stat-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dash-stat-number {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1.2;
+        }
+
+        .dash-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dash-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .dash-action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .main-content {
+            max-width: 1100px;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .dashboard-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Login Gate -->
+    <div class="login-gate" id="loginGate">
+        <div class="login-box">
+            <h2><i data-lucide="lock" style="width:24px;height:24px;vertical-align:middle;margin-right:8px;"></i>Panel
+                Administrativo</h2>
+            <p>Ingresa tus credenciales para acceder</p>
+            <div class="login-error" id="loginError">Credenciales incorrectas</div>
+            <input type="email" id="loginEmail" placeholder="Email de administrador" autocomplete="email">
+            <input type="password" id="loginPassword" placeholder="Contraseña" autocomplete="current-password">
+            <button class="btn btn-primary" id="loginBtn" style="width:100%"><i data-lucide="lock-open"
+                    style="width:16px;height:16px;vertical-align:middle;margin-right:6px;"></i>Acceder</button>
+            <p style="font-size:0.7rem;color:var(--text-muted);margin-top:8px;text-align:center">🔥 Autenticación segura con Firebase</p>
+        </div>
+    </div>
+
+    <!-- Mobile Toggle -->
+    <button class="mobile-toggle" style="display:none" id="mobileToggle">
+        <i data-lucide="menu" style="width:22px;height:22px;"></i>
+    </button>
+
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <h1><span></span> Admin Panel</h1>
+                <p>ArtKing47 — Gestión de contenido</p>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="active" data-section="dashboard">
+                    <i data-lucide="home"></i>
+                    Dashboard
+                </button>
+                <button data-section="general">
+                    <i data-lucide="settings"></i>
+                    General
+                </button>
+                <button data-section="hero">
+                    <i data-lucide="image"></i>
+                    Hero / Slides
+                </button>
+                <button data-section="about">
+                    <i data-lucide="user"></i>
+                    Sobre Mí
+                </button>
+                <button data-section="portfolio">
+                    <i data-lucide="layout-grid"></i>
+                    Portfolio
+                </button>
+                <button data-section="services">
+                    <i data-lucide="briefcase"></i>
+                    Servicios
+                </button>
+                <button data-section="testimonials">
+                    <i data-lucide="message-square"></i>
+                    Testimonios
+                </button>
+                <button data-section="process">
+                    <i data-lucide="route"></i>
+                    Proceso
+                </button>
+                <button data-section="faqadmin">
+                    <i data-lucide="help-circle"></i>
+                    FAQ
+                </button>
+                <button data-section="contact">
+                    <i data-lucide="mail"></i>
+                    Contacto
+                </button>
+                <button data-section="config">
+                    <i data-lucide="hard-drive-download"></i>
+                    Configuración
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="index.html" target="_blank">
+                    <i data-lucide="external-link"
+                        style="width:16px;height:16px;vertical-align:middle;margin-right:4px;"></i>
+                    Ver sitio web →
+                </a>
+                <div class="timezone-display" id="venezuelaTime">
+                    🇻🇪 VET (UTC-4): <span class="time" id="vetClock">--:--:--</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- ==================== DASHBOARD ==================== -->
+            <div class="admin-section active" id="section-dashboard">
+                <div class="page-header">
+                    <h2>📊 Dashboard</h2>
+                    <p>Resumen de tu sitio web — ArtKing47</p>
+                </div>
+
+                <div class="dashboard-stats" id="dashboardStats">
+                    <div class="dash-stat-card">
+                        <div class="dash-stat-icon"><i data-lucide="layout-grid" style="width:24px;height:24px;color:var(--accent)"></i></div>
+                        <div class="dash-stat-info">
+                            <span class="dash-stat-number" id="dashPortfolioCount">0</span>
+                            <span class="dash-stat-label">Proyectos</span>
+                        </div>
+                    </div>
+                    <div class="dash-stat-card">
+                        <div class="dash-stat-icon"><i data-lucide="briefcase" style="width:24px;height:24px;color:var(--accent)"></i></div>
+                        <div class="dash-stat-info">
+                            <span class="dash-stat-number" id="dashServicesCount">0</span>
+                            <span class="dash-stat-label">Servicios</span>
+                        </div>
+                    </div>
+                    <div class="dash-stat-card">
+                        <div class="dash-stat-icon"><i data-lucide="message-square" style="width:24px;height:24px;color:var(--accent)"></i></div>
+                        <div class="dash-stat-info">
+                            <span class="dash-stat-number" id="dashTestimonialsCount">0</span>
+                            <span class="dash-stat-label">Testimonios</span>
+                        </div>
+                    </div>
+                    <div class="dash-stat-card">
+                        <div class="dash-stat-icon"><i data-lucide="help-circle" style="width:24px;height:24px;color:var(--accent)"></i></div>
+                        <div class="dash-stat-info">
+                            <span class="dash-stat-number" id="dashFaqCount">0</span>
+                            <span class="dash-stat-label">Preguntas FAQ</span>
+                        </div>
+                    </div>
+                    <div class="dash-stat-card">
+                        <div class="dash-stat-icon"><i data-lucide="image" style="width:24px;height:24px;color:var(--accent)"></i></div>
+                        <div class="dash-stat-info">
+                            <span class="dash-stat-number" id="dashSlidesCount">0</span>
+                            <span class="dash-stat-label">Hero Slides</span>
+                        </div>
+                    </div>
+                    <div class="dash-stat-card">
+                        <div class="dash-stat-icon"><i data-lucide="clock" style="width:24px;height:24px;color:var(--accent)"></i></div>
+                        <div class="dash-stat-info">
+                            <span class="dash-stat-number" id="dashClock" style="font-size:1.1rem">--:--</span>
+                            <span class="dash-stat-label">Venezuela 🇻🇪</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Acciones Rápidas</div>
+                    <div class="dash-actions">
+                        <button class="btn btn-secondary dash-action-btn" data-goto="portfolio"><i data-lucide="plus" style="width:16px;height:16px"></i> Nuevo Proyecto</button>
+                        <button class="btn btn-secondary dash-action-btn" data-goto="testimonials"><i data-lucide="plus" style="width:16px;height:16px"></i> Nuevo Testimonio</button>
+                        <button class="btn btn-secondary dash-action-btn" data-goto="faqadmin"><i data-lucide="plus" style="width:16px;height:16px"></i> Nueva Pregunta</button>
+                        <a href="index.html" target="_blank" class="btn btn-primary dash-action-btn"><i data-lucide="external-link" style="width:16px;height:16px"></i> Ver sitio en vivo</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Última modificación</div>
+                    <p style="color:var(--text-secondary);font-size:0.9rem" id="dashLastModified">Sin datos guardados aún</p>
+                </div>
+            </div>
+
+            <!-- ==================== GENERAL ==================== -->
+            <div class="admin-section" id="section-general">
+                <div class="page-header">
+                    <h2>⚙️ General</h2>
+                    <p>Configuración general del sitio web</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Identidad del Sitio</div>
+                    <label for="gen-siteName">Nombre del sitio</label>
+                    <input type="text" id="gen-siteName" value="ArtKing47" placeholder="Tu nombre o marca">
+
+                    <label for="gen-badge">Badge del Hero</label>
+                    <input type="text" id="gen-badge" value="Disponible para proyectos" placeholder="Texto del badge">
+
+                    <label for="gen-heroTitle">Título principal (HTML permitido)</label>
+                    <textarea id="gen-heroTitle" rows="2"
+                        placeholder="Tu marca merece...">Tu marca merece&lt;br&gt;un diseño &lt;span class=&quot;gradient-text&quot;&gt;brutal&lt;/span&gt;</textarea>
+
+                    <label for="gen-heroDesc">Descripción del Hero</label>
+                    <textarea id="gen-heroDesc"
+                        rows="3">Logos, flyers, contenido para redes, business cards y todo lo que tu marca necesita para destacar. Diseño gráfico profesional con estilo y actitud.</textarea>
+                </div>
+            </div>
+
+            <!-- ==================== HERO / SLIDES ==================== -->
+            <div class="admin-section" id="section-hero">
+                <div class="page-header">
+                    <h2>🎬 Hero / Slides</h2>
+                    <p>Gestiona las imágenes o animaciones del fondo del hero. Los slides rotan automáticamente.</p>
+                </div>
+
+                <div id="heroSlidesContainer"></div>
+
+                <div class="btn-group">
+                    <button class="btn btn-secondary" id="addHeroSlideBtn">+ Agregar slide con imagen</button>
+                </div>
+            </div>
+
+            <!-- ==================== ABOUT ==================== -->
+            <div class="admin-section" id="section-about">
+                <div class="page-header">
+                    <h2>👤 Sobre Mí</h2>
+                    <p>Tu información personal y estadísticas</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Avatar / Foto</div>
+                    <div class="image-upload-zone" id="avatarUploadZone">
+                        <input type="file" accept="image/*" id="avatarFileInput">
+                        <span class="upload-icon">📷</span>
+                        <p>Arrastra o haz clic para subir tu foto de perfil</p>
+                    </div>
+                    <div id="avatarPreviewContainer"></div>
+                    <label for="about-avatarInitials">Iniciales (si no hay foto)</label>
+                    <input type="text" id="about-avatarInitials" value="AK" maxlength="3">
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Biografía</div>
+                    <label for="about-bio1">Párrafo 1</label>
+                    <textarea id="about-bio1"
+                        rows="3">Soy ArtKing47, diseñador gráfico apasionado por crear piezas visuales que impactan. Me especializo en logos, flyers, contenido para redes sociales y business cards que hacen que tu marca se vea profesional y memorable.</textarea>
+
+                    <label for="about-bio2">Párrafo 2</label>
+                    <textarea id="about-bio2"
+                        rows="3">Trabajo con emprendedores, negocios y marcas personales que quieren sobresalir con un diseño de otro nivel. Si lo puedes imaginar, yo lo puedo diseñar.</textarea>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Estadísticas</div>
+                    <div class="form-row-3">
+                        <div>
+                            <label for="about-stat1num">Número 1</label>
+                            <input type="number" id="about-stat1num" value="150">
+                            <label for="about-stat1label">Label 1</label>
+                            <input type="text" id="about-stat1label" value="Proyectos">
+                        </div>
+                        <div>
+                            <label for="about-stat2num">Número 2</label>
+                            <input type="number" id="about-stat2num" value="80">
+                            <label for="about-stat2label">Label 2</label>
+                            <input type="text" id="about-stat2label" value="Clientes">
+                        </div>
+                        <div>
+                            <label for="about-stat3num">Número 3</label>
+                            <input type="number" id="about-stat3num" value="8">
+                            <label for="about-stat3label">Label 3</label>
+                            <input type="text" id="about-stat3label" value="Años exp.">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== PORTFOLIO ==================== -->
+            <div class="admin-section" id="section-portfolio">
+                <div class="page-header">
+                    <h2>🖼️ Portfolio</h2>
+                    <p>Gestiona tus proyectos. Agrega imágenes reales de tus trabajos.</p>
+                </div>
+
+                <div id="portfolioContainer"></div>
+
+                <div class="btn-group">
+                    <button class="btn btn-secondary" id="addPortfolioBtn">+ Agregar proyecto</button>
+                </div>
+            </div>
+
+            <!-- ==================== SERVICES ==================== -->
+            <div class="admin-section" id="section-services">
+                <div class="page-header">
+                    <h2>🛠️ Servicios</h2>
+                    <p>Edita los servicios que ofreces</p>
+                </div>
+
+                <div id="servicesContainer"></div>
+
+                <div class="btn-group">
+                    <button class="btn btn-secondary" id="addServiceBtn">+ Agregar servicio</button>
+                </div>
+            </div>
+
+            <!-- ==================== TESTIMONIALS ==================== -->
+            <div class="admin-section" id="section-testimonials">
+                <div class="page-header">
+                    <h2>💬 Testimonios</h2>
+                    <p>Gestiona los testimonios de tus clientes. Se muestran en la landing page.</p>
+                </div>
+
+                <div id="testimonialsContainer"></div>
+
+                <div class="btn-group">
+                    <button class="btn btn-secondary" id="addTestimonialBtn">+ Agregar testimonio</button>
+                </div>
+            </div>
+
+            <!-- ==================== PROCESS ==================== -->
+            <div class="admin-section" id="section-process">
+                <div class="page-header">
+                    <h2>🔄 Proceso de Trabajo</h2>
+                    <p>Define los pasos de tu proceso creativo. Se muestran en la sección "Cómo trabajamos".</p>
+                </div>
+
+                <div id="processContainer"></div>
+
+                <div class="btn-group">
+                    <button class="btn btn-secondary" id="addProcessBtn">+ Agregar paso</button>
+                </div>
+            </div>
+
+            <!-- ==================== FAQ ADMIN ==================== -->
+            <div class="admin-section" id="section-faqadmin">
+                <div class="page-header">
+                    <h2>❓ Preguntas Frecuentes</h2>
+                    <p>Gestiona las preguntas y respuestas que aparecen en tu web.</p>
+                </div>
+
+                <div id="faqContainer"></div>
+
+                <div class="btn-group">
+                    <button class="btn btn-secondary" id="addFaqBtn">+ Agregar pregunta</button>
+                </div>
+            </div>
+
+            <!-- ==================== CONTACT ==================== -->
+            <div class="admin-section" id="section-contact">
+                <div class="page-header">
+                    <h2>📬 Contacto</h2>
+                    <p>Tu información de contacto y redes sociales</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Información de Contacto</div>
+                    <label for="contact-email">Email</label>
+                    <input type="email" id="contact-email" value="contacto@artking47.com">
+
+                    <label for="contact-location">Ubicación</label>
+                    <input type="text" id="contact-location" value="Venezuela 🇻🇪">
+
+                    <label for="contact-availability">Disponibilidad</label>
+                    <input type="text" id="contact-availability" value="Lun – Vie, 9:00 – 18:00 (VET, UTC-4)">
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Redes Sociales <span class="badge">URLs</span></div>
+                    <label for="social-behance">Behance</label>
+                    <input type="url" id="social-behance" value="https://behance.net"
+                        placeholder="https://behance.net/tu-perfil">
+
+                    <label for="social-dribbble">Dribbble</label>
+                    <input type="url" id="social-dribbble" value="https://dribbble.com"
+                        placeholder="https://dribbble.com/tu-perfil">
+
+                    <label for="social-instagram">Instagram</label>
+                    <input type="url" id="social-instagram" value="https://instagram.com"
+                        placeholder="https://instagram.com/tu-perfil">
+
+                    <label for="social-linkedin">LinkedIn</label>
+                    <input type="url" id="social-linkedin" value="https://linkedin.com"
+                        placeholder="https://linkedin.com/in/tu-perfil">
+
+                    <label for="social-twitter">X / Twitter</label>
+                    <input type="url" id="social-twitter" value="https://twitter.com"
+                        placeholder="https://x.com/tu-perfil">
+                </div>
+            </div>
+
+            <!-- ==================== CONFIG ==================== -->
+            <div class="admin-section" id="section-config">
+                <div class="page-header">
+                    <h2>⚙️ Configuración</h2>
+                    <p>Herramientas avanzadas, backup y seguridad</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">🔐 Cambiar Contraseña</div>
+                    <label for="config-newPassword">Nueva contraseña</label>
+                    <input type="password" id="config-newPassword" placeholder="Mínimo 6 caracteres">
+                    <label for="config-confirmPassword">Confirmar contraseña</label>
+                    <input type="password" id="config-confirmPassword" placeholder="Repite la contraseña">
+                    <button class="btn btn-primary" id="changePasswordBtn" style="margin-top:0.5rem">
+                        🔑 Cambiar contraseña
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">📱 WhatsApp</div>
+                    <label for="config-whatsapp">Número de WhatsApp (con código de país)</label>
+                    <input type="text" id="config-whatsapp" value="58412136056" placeholder="58412136056">
+                    <p style="color:var(--text-muted);font-size:0.8rem;margin-top:4px">Sin el +, sin espacios. Se usa en el botón flotante y la sección CTA.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">📧 Formspree</div>
+                    <label for="config-formspree">Form ID de Formspree</label>
+                    <input type="text" id="config-formspree" value="xjkwqzrn" placeholder="xjkwqzrn">
+                    <p style="color:var(--text-muted);font-size:0.8rem;margin-top:4px">Regístrate gratis en formspree.io y pega tu Form ID aquí.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">📥 Exportar Configuración</div>
+                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1rem;">
+                        Descarga un archivo JSON con todo tu contenido. Útil como backup.
+                    </p>
+                    <button class="btn btn-primary" id="exportConfigBtn">
+                        📥 Descargar config.json
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">📤 Importar Configuración</div>
+                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1rem;">
+                        Carga un archivo JSON previamente exportado. Reemplazará el contenido actual.
+                    </p>
+                    <div class="image-upload-zone" id="importZone">
+                        <input type="file" accept=".json" id="importFileInput">
+                        <span class="upload-icon">📁</span>
+                        <p>Arrastra o haz clic para cargar config.json</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title" style="color: var(--danger);">⚠️ Zona de Peligro</div>
+                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1rem;">
+                        Eliminar todo el contenido personalizado y restaurar los valores por defecto.
+                    </p>
+                    <button class="btn btn-danger" id="resetConfigBtn">
+                        🗑️ Restaurar todo a valores por defecto
+                    </button>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Save Bar -->
+    <div class="save-bar">
+        <button class="btn btn-secondary" id="discardBtn">↩️ Descartar cambios</button>
+        <button class="btn btn-primary" id="saveBtn">💾 Guardar cambios</button>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">✅ Cambios guardados</div>
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+    <!-- Firebase SDK (compat mode for CDN) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="admin.js?v=6"></script>
+</body>
+
+</html>

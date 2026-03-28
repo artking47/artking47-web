@@ -1,0 +1,1 @@
+User-agent: *\r\nAllow: /\r\nDisallow: /admin.html\r\nDisallow: /admin.js\r\n\r\nSitemap: https://artking47.com/sitemap.xml

@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Security Headers -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' https://unpkg.com https://www.gstatic.com https://www.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://*.googleapis.com https://*.googleusercontent.com https://firebasestorage.googleapis.com; connect-src 'self' https://formspree.io https://*.googleapis.com https://*.firebaseio.com https://firebasestorage.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self';">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+
+  <meta name="description"
+    content="ArtKing47 — Diseñador gráfico profesional. Logos, flyers, posts para redes sociales, business cards y más. Diseño visual de alto impacto.">
+  <meta name="keywords" content="diseño gráfico, logos, flyers, business cards, redes sociales, branding, ArtKing47">
+  <meta name="author" content="ArtKing47">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="ArtKing47 — Diseño Gráfico Premium">
+  <meta property="og:description"
+    content="Diseño gráfico de alto impacto. Logos, flyers, contenido para redes y más. Portfolio profesional de ArtKing47.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_VE">
+  <meta property="og:url" content="https://artking47.com">
+  <meta property="og:site_name" content="ArtKing47">
+
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ArtKing47 — Diseño Gráfico Premium">
+  <meta name="twitter:description" content="Logos, flyers, posts para redes, business cards. Diseño gráfico profesional con estilo y actitud.">
+
+  <title>ArtKing47 — Diseñador Gráfico Profesional</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap">
+
+  <!-- Theme -->
+  <meta name="theme-color" content="#050507">
+
+  <!-- Styles -->
+  <link rel="preload" href="styles.css?v=5" as="style">
+  <link rel="stylesheet" href="styles.css?v=5">
+
+  <!-- Favicon -->
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23d62839'/><stop offset='100%25' stop-color='%23e63946'/></linearGradient></defs><circle cx='50' cy='50' r='40' fill='url(%23g)'/></svg>">
+
+  <!-- Schema.org Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "ArtKing47",
+    "description": "Diseñador gráfico profesional. Logos, flyers, posts para redes sociales, business cards y branding.",
+    "url": "https://artking47.com",
+    "areaServed": "Venezuela",
+    "priceRange": "$$",
+    "serviceType": ["Diseño Gráfico", "Branding", "Logos", "Flyers", "Social Media Design"],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+58412136056",
+      "contactType": "customer service",
+      "availableLanguage": "Spanish"
+    }
+  }
+  </script>
+</head>
+
+<body>
+
+  <!-- Loader -->
+  <div class="page-loader" id="pageLoader">
+    <div class="loader-content">
+      <div class="loader-logo"><span class="loader-dot"></span> ArtKing47</div>
+      <div class="loader-bar"><div class="loader-fill"></div></div>
+    </div>
+  </div>
+
+  <!-- Custom Cursor (desktop) -->
+  <div class="custom-cursor" id="cursorDot"></div>
+  <div class="custom-cursor-ring" id="cursorRing"></div>
+
+  <!-- Dark Mode Toggle -->
+  <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema">
+    <i data-lucide="moon" class="theme-icon-dark"></i>
+    <i data-lucide="sun" class="theme-icon-light"></i>
+  </button>
+
+  <!-- Floating WhatsApp -->
+  <a href="https://wa.me/58412136056?text=¡Hola%20ArtKing47!%20Me%20interesa%20un%20diseño%20🎨"
+     target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="WhatsApp">
+    <svg viewBox="0 0 24 24" fill="#fff" width="28" height="28">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+  </a>
+
+  <!-- Skip to content (accessibility) -->
+  <a href="#hero" class="skip-link">Saltar al contenido</a>
+
+  <!-- ========================================
+       NAVBAR
+       ======================================== -->
+  <nav class="navbar" id="navbar" role="navigation" aria-label="Navegación principal">
+    <div class="container">
+      <a href="#hero" class="nav-logo" aria-label="Ir al inicio">
+        <span class="logo-dot"></span>
+        ArtKing47
+      </a>
+
+      <div class="nav-links" id="navLinks">
+        <a href="#about">Sobre Mí</a>
+        <a href="#portfolio">Portfolio</a>
+        <a href="#services">Servicios</a>
+        <a href="#contact">Contacto</a>
+        <a href="#contact" class="btn btn-primary btn-sm nav-cta">Hablemos</a>
+      </div>
+
+      <div class="nav-hamburger" id="navHamburger" aria-label="Abrir menú" role="button" tabindex="0">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+    <div class="nav-overlay" id="navOverlay"></div>
+  </nav>
+
+  <!-- ========================================
+       HERO SECTION
+       ======================================== -->
+  <section class="hero" id="hero">
+    <!-- Gallery Background -->
+    <div class="hero-gallery" aria-hidden="true">
+      <div class="hero-slide active">
+        <div class="hero-slide-bg slide-art-1"></div>
+      </div>
+      <div class="hero-slide">
+        <div class="hero-slide-bg slide-art-2"></div>
+      </div>
+      <div class="hero-slide">
+        <div class="hero-slide-bg slide-art-3"></div>
+      </div>
+    </div>
+
+    <div class="hero-overlay"></div>
+
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="badge-dot"></span>
+          Disponible para proyectos
+        </div>
+
+        <h1 class="hero-title">
+          Tu marca merece<br>
+          un diseño <span class="gradient-text">brutal</span>
+        </h1>
+
+        <p class="hero-description">
+          Logos, flyers, contenido para redes, business cards y todo lo que tu marca necesita para destacar. Diseño
+          gráfico profesional con estilo y actitud.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#portfolio" class="btn btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7" />
+              <rect x="14" y="3" width="7" height="7" />
+              <rect x="3" y="14" width="7" height="7" />
+              <rect x="14" y="14" width="7" height="7" />
+            </svg>
+            Ver portfolio
+          </a>
+          <a href="#contact" class="btn btn-outline">Contáctame</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-scroll" aria-hidden="true">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       ABOUT SECTION
+       ======================================== -->
+  <section class="section" id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-image-wrapper animate-on-scroll">
+          <div class="about-image glass">
+            <div class="about-image-placeholder">
+              <div class="about-avatar">AK</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="about-text">
+          <div class="animate-on-scroll">
+            <span class="section-label">Sobre Mí</span>
+            <h2 class="section-title">Creando marcas que <span class="gradient-text">conectan</span></h2>
+          </div>
+
+          <div class="animate-on-scroll delay-1">
+            <p>
+              Soy ArtKing47, diseñador gráfico apasionado por crear piezas visuales que impactan. Me especializo en
+              logos, flyers, contenido para redes sociales y business cards que hacen que tu marca se vea profesional y
+              memorable.
+            </p>
+            <p>
+              Trabajo con emprendedores, negocios y marcas personales que quieren sobresalir con un diseño de otro
+              nivel. Si lo puedes imaginar, yo lo puedo diseñar.
+            </p>
+          </div>
+
+          <div class="about-stats glass animate-on-scroll delay-2">
+            <div class="stat-item">
+              <div class="stat-number" data-count="150">0</div>
+              <div class="stat-label">Proyectos</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number" data-count="80">0</div>
+              <div class="stat-label">Clientes</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number" data-count="8">0</div>
+              <div class="stat-label">Años exp.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       PORTFOLIO SECTION
+       ======================================== -->
+  <section class="section" id="portfolio">
+    <div class="container">
+      <div class="animate-on-scroll">
+        <span class="section-label">Portfolio</span>
+        <h2 class="section-title">Proyectos <span class="gradient-text">destacados</span></h2>
+        <p class="section-subtitle">Una selección de mis trabajos más recientes en logos, flyers, contenido para redes y
+          branding.</p>
+      </div>
+
+      <div class="portfolio-grid">
+        <!-- Project 1 -->
+        <div class="portfolio-card glass glass-hover animate-on-scroll delay-1">
+          <div class="portfolio-thumbnail">
+            <div class="portfolio-art port-art-1"></div>
+          </div>
+          <div class="portfolio-info">
+            <span class="portfolio-category">Logo & Branding</span>
+            <h3 class="portfolio-title">Nebula Cosmetics</h3>
+          </div>
+        </div>
+
+        <!-- Project 2 -->
+        <div class="portfolio-card glass glass-hover animate-on-scroll delay-2">
+          <div class="portfolio-thumbnail">
+            <div class="portfolio-art port-art-2"></div>
+          </div>
+          <div class="portfolio-info">
+            <span class="portfolio-category">Business Cards</span>
+            <h3 class="portfolio-title">Vertex Studio</h3>
+          </div>
+        </div>
+
+        <!-- Project 3 -->
+        <div class="portfolio-card glass glass-hover animate-on-scroll delay-3">
+          <div class="portfolio-thumbnail">
+            <div class="portfolio-art port-art-3"></div>
+          </div>
+          <div class="portfolio-info">
+            <span class="portfolio-category">Flyer</span>
+            <h3 class="portfolio-title">Neon Nights Event</h3>
+          </div>
+        </div>
+
+        <!-- Project 4 -->
+        <div class="portfolio-card glass glass-hover animate-on-scroll delay-1">
+          <div class="portfolio-thumbnail">
+            <div class="portfolio-art port-art-4"></div>
+          </div>
+          <div class="portfolio-info">
+            <span class="portfolio-category">Redes Sociales</span>
+            <h3 class="portfolio-title">FitPro Gym</h3>
+          </div>
+        </div>
+
+        <!-- Project 5 -->
+        <div class="portfolio-card glass glass-hover animate-on-scroll delay-2">
+          <div class="portfolio-thumbnail">
+            <div class="portfolio-art port-art-5"></div>
+          </div>
+          <div class="portfolio-info">
+            <span class="portfolio-category">Logo & Branding</span>
+            <h3 class="portfolio-title">Prism Records</h3>
+          </div>
+        </div>
+
+        <!-- Project 6 -->
+        <div class="portfolio-card glass glass-hover animate-on-scroll delay-3">
+          <div class="portfolio-thumbnail">
+            <div class="portfolio-art port-art-6"></div>
+          </div>
+          <div class="portfolio-info">
+            <span class="portfolio-category">Flyer & Promo</span>
+            <h3 class="portfolio-title">Zenith Festival</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       SERVICES SECTION
+       ======================================== -->
+  <section class="section" id="services">
+    <div class="container">
+      <div class="animate-on-scroll">
+        <span class="section-label">Servicios</span>
+        <h2 class="section-title">Lo que puedo <span class="gradient-text">hacer por ti</span></h2>
+        <p class="section-subtitle">Servicios integrales de diseño para elevar la presencia visual de tu marca.</p>
+      </div>
+
+      <div class="services-grid">
+        <!-- Service 1: Logos -->
+        <div class="service-card glass glass-hover animate-on-scroll delay-1">
+          <div class="service-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#d62839" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5z" />
+              <path d="M2 17l10 5 10-5" />
+              <path d="M2 12l10 5 10-5" />
+            </svg>
+          </div>
+          <h3 class="service-name">Logos & Identidad de Marca</h3>
+          <p class="service-desc">Logotipos profesionales y sistemas de identidad visual completos que definen la
+            esencia de tu marca y la hacen inolvidable.</p>
+        </div>
+
+        <!-- Service 2: Flyers -->
+        <div class="service-card glass glass-hover animate-on-scroll delay-2">
+          <div class="service-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#d62839" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="2" />
+              <line x1="7" y1="8" x2="17" y2="8" />
+              <line x1="7" y1="12" x2="14" y2="12" />
+              <line x1="7" y1="16" x2="11" y2="16" />
+            </svg>
+          </div>
+          <h3 class="service-name">Flyers & Material Promocional</h3>
+          <p class="service-desc">Flyers, afiches y material impreso con diseños llamativos que capturan la atención y
+            comunican tu mensaje con fuerza.</p>
+        </div>
+
+        <!-- Service 3: Social Media -->
+        <div class="service-card glass glass-hover animate-on-scroll delay-3">
+          <div class="service-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#d62839" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <polyline points="21 15 16 10 5 21" />
+            </svg>
+          </div>
+          <h3 class="service-name">Posts para Redes Sociales</h3>
+          <p class="service-desc">Contenido visual de alto impacto para Instagram, Facebook, TikTok y más. Diseños que
+            generan engagement y fortalecen tu presencia digital.</p>
+        </div>
+
+        <!-- Service 4: Business Cards -->
+        <div class="service-card glass glass-hover animate-on-scroll delay-4">
+          <div class="service-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#d62839" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="2" />
+              <line x1="6" y1="10" x2="12" y2="10" />
+              <line x1="6" y1="14" x2="10" y2="14" />
+              <circle cx="17" cy="12" r="2" />
+            </svg>
+          </div>
+          <h3 class="service-name">Business Cards</h3>
+          <p class="service-desc">Tarjetas de presentación con diseño premium que dejan una impresión profesional y
+            memorable en cada contacto.</p>
+        </div>
+
+        <!-- Service 5: Banners & Ads -->
+        <div class="service-card glass glass-hover animate-on-scroll delay-5">
+          <div class="service-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#d62839" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+              <line x1="8" y1="21" x2="16" y2="21" />
+              <line x1="12" y1="17" x2="12" y2="21" />
+            </svg>
+          </div>
+          <h3 class="service-name">Banners & Publicidad Digital</h3>
+          <p class="service-desc">Banners, portadas y creatividades publicitarias optimizadas para campañas digitales
+            que convierten y generan resultados.</p>
+        </div>
+
+        <!-- Service 6: Y más -->
+        <div class="service-card glass glass-hover animate-on-scroll delay-1">
+          <div class="service-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#d62839" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="16" />
+              <line x1="8" y1="12" x2="16" y2="12" />
+            </svg>
+          </div>
+          <h3 class="service-name">Y Mucho Más</h3>
+          <p class="service-desc">Menús, invitaciones, presentaciones, mockups y cualquier pieza gráfica que necesites.
+            Si lo imaginas, lo diseño.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       CTA SECTION
+       ======================================== -->
+  <section class="section cta-section" id="cta">
+    <div class="container">
+      <div class="cta-wrapper glass animate-on-scroll">
+        <h2 class="cta-title">
+          ¿Tienes un proyecto en <span class="gradient-text">mente</span>?
+        </h2>
+        <p class="cta-text">
+          Convirtamos tu visión en realidad. Estoy listo para ayudarte a crear algo extraordinario que impulse tu marca
+          al siguiente nivel.
+        </p>
+        <a href="#contact" class="btn btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+            <polyline points="22,6 12,13 2,6" />
+          </svg>
+          Iniciar conversación
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       WHATSAPP CTA
+       ======================================== -->
+  <section class="section whatsapp-section" id="whatsapp">
+    <div class="container">
+      <div class="whatsapp-cta animate-on-scroll">
+        <div class="whatsapp-icon-ring">
+          <svg class="whatsapp-icon" viewBox="0 0 24 24" fill="#fff" width="48" height="48">
+            <path
+              d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+          </svg>
+        </div>
+        <h2 class="whatsapp-title">¿Listo para tu diseño?</h2>
+        <p class="whatsapp-desc">Escríbeme directo por WhatsApp y hablemos de tu proyecto</p>
+        <a href="https://wa.me/58412136056?text=¡Hola%20ArtKing47!%20Me%20interesa%20un%20diseño%20🎨" target="_blank"
+          rel="noopener noreferrer" class="whatsapp-btn">
+          <svg viewBox="0 0 24 24" fill="#fff" width="24" height="24">
+            <path
+              d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+          </svg>
+          Escríbeme por WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       CONTACT SECTION
+       ======================================== -->
+  <section class="section" id="contact">
+    <div class="container">
+      <div class="animate-on-scroll">
+        <span class="section-label">Contacto</span>
+        <h2 class="section-title">Hablemos de tu <span class="gradient-text">próximo proyecto</span></h2>
+        <p class="section-subtitle">Estoy siempre abierto a nuevas oportunidades y colaboraciones creativas.</p>
+      </div>
+
+      <div class="contact-grid">
+        <div>
+          <div class="contact-info-item animate-on-scroll delay-1">
+            <div class="contact-icon glass">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d62839" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                <polyline points="22,6 12,13 2,6" />
+              </svg>
+            </div>
+            <div class="contact-detail">
+              <h4>Email</h4>
+              <p>contacto@artking47.com</p>
+            </div>
+          </div>
+
+          <div class="contact-info-item animate-on-scroll delay-2">
+            <div class="contact-icon glass">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d62839" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+            </div>
+            <div class="contact-detail">
+              <h4>Ubicación</h4>
+              <p>Venezuela 🇻🇪</p>
+            </div>
+          </div>
+
+          <div class="contact-info-item animate-on-scroll delay-3">
+            <div class="contact-icon glass">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d62839" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+            </div>
+            <div class="contact-detail">
+              <h4>Disponibilidad</h4>
+              <p>Lun – Vie, 9:00 – 18:00 (VET, UTC-4)</p>
+            </div>
+          </div>
+
+          <!-- Social Links -->
+          <div class="social-links animate-on-scroll delay-4">
+            <a href="https://behance.net" target="_blank" rel="noopener noreferrer" class="social-link"
+              aria-label="Behance">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M22 7h-7v-2h7v2zm1.726 10c-.442 1.297-2.029 3-5.101 3-3.074 0-5.564-1.729-5.564-5.675 0-3.91 2.325-5.92 5.466-5.92 3.082 0 4.964 1.782 5.375 4.426.078.506.109 1.188.095 2.14h-8.027c.13 3.211 3.483 3.312 4.588 2.029h3.168zm-7.686-4h5.025c-.07-1.577-1.1-2.36-2.467-2.36-1.453 0-2.373.842-2.558 2.36zm-8.040 7h-8v-18h7.818c6.235-.066 6.235 5.664 3.252 7.238 3.666 1.082 3.87 6.452-.438 7.762h3.368zm-5-15v4h3.828c2.877 0 3.013-4-.188-4h-3.64zm0 7v5h4.495c3.349 0 3.378-5-.18-5h-4.315z" />
+              </svg>
+            </a>
+            <a href="https://dribbble.com" target="_blank" rel="noopener noreferrer" class="social-link"
+              aria-label="Dribbble">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M12 0c-6.628 0-12 5.373-12 12s5.372 12 12 12 12-5.373 12-12-5.372-12-12-12zm9.885 11.441c-2.575-.422-4.943-.445-7.103-.073-.244-.563-.497-1.125-.767-1.68 2.31-1 4.165-2.358 5.548-4.082 1.35 1.594 2.197 3.619 2.322 5.835zm-3.842-7.282c-1.205 1.554-2.868 2.783-4.986 3.68-1.016-1.861-2.178-3.676-3.488-5.438.779-.197 1.591-.314 2.431-.314 2.275 0 4.368.779 6.043 2.072zm-10.516-.993c1.331 1.742 2.511 3.538 3.537 5.381-2.43.715-5.331 1.082-8.684 1.105.692-2.835 2.601-5.193 5.147-6.486zm-5.44 8.834l.013-.256c3.849-.005 7.169-.448 9.95-1.322.233.475.456.952.67 1.432-3.38 1.057-6.165 3.222-8.337 6.48-1.432-1.719-2.296-3.927-2.296-6.334zm3.829 7.81c1.969-3.088 4.482-5.098 7.598-6.027.928 2.42 1.609 4.91 2.043 7.46-3.349 1.291-7.178.708-9.641-1.433zm11.586.43c-.438-2.353-1.08-4.653-1.92-6.897 1.876-.265 3.94-.196 6.199.196-.437 2.786-2.028 5.192-4.279 6.701z" />
+              </svg>
+            </a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="social-link"
+              aria-label="Instagram">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+              </svg>
+            </a>
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="social-link"
+              aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z" />
+              </svg>
+            </a>
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="social-link"
+              aria-label="X / Twitter">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Contact Form -->
+        <form class="contact-form glass animate-on-scroll delay-2" style="padding: var(--space-lg);" id="contactForm">
+          <div class="form-group">
+            <input type="text" placeholder="Tu nombre" required id="contactName" autocomplete="name">
+          </div>
+          <div class="form-group">
+            <input type="email" placeholder="Tu email" required id="contactEmail" autocomplete="email">
+          </div>
+          <div class="form-group">
+            <input type="text" placeholder="Asunto" id="contactSubject">
+          </div>
+          <div class="form-group">
+            <textarea placeholder="Cuéntame sobre tu proyecto..." required id="contactMessage"></textarea>
+          </div>
+          <!-- Honeypot — hidden from humans, bots fill this in -->
+          <div style="position:absolute;left:-9999px;top:-9999px;" aria-hidden="true">
+            <input type="text" id="contactWebsite" name="website" tabindex="-1" autocomplete="off">
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13" />
+              <polygon points="22 2 15 22 11 13 2 9 22 2" />
+            </svg>
+            Enviar mensaje
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       PROCESS SECTION
+       ======================================== -->
+  <section class="section" id="process">
+    <div class="container">
+      <div class="animate-on-scroll">
+        <span class="section-label">Proceso</span>
+        <h2 class="section-title">Cómo <span class="gradient-text">trabajamos</span></h2>
+        <p class="section-subtitle">Un flujo claro y transparente para que tu proyecto avance sin estrés.</p>
+      </div>
+
+      <div class="process-grid">
+        <div class="process-step glass animate-on-scroll delay-1">
+          <div class="process-number">01</div>
+          <div class="process-icon"><i data-lucide="message-circle" color="#d62839" stroke-width="1.5"></i></div>
+          <h3>Briefing</h3>
+          <p>Conversamos sobre tu visión, objetivos y estilo. Entiendo a fondo qué necesita tu marca.</p>
+        </div>
+        <div class="process-step glass animate-on-scroll delay-2">
+          <div class="process-number">02</div>
+          <div class="process-icon"><i data-lucide="lightbulb" color="#d62839" stroke-width="1.5"></i></div>
+          <h3>Concepto</h3>
+          <p>Investigo, boceto y desarrollo propuestas creativas alineadas con tu identidad.</p>
+        </div>
+        <div class="process-step glass animate-on-scroll delay-3">
+          <div class="process-number">03</div>
+          <div class="process-icon"><i data-lucide="pen-tool" color="#d62839" stroke-width="1.5"></i></div>
+          <h3>Diseño</h3>
+          <p>Creo las piezas finales con precisión pixel-perfect. Revisiones incluidas hasta tu satisfacción.</p>
+        </div>
+        <div class="process-step glass animate-on-scroll delay-4">
+          <div class="process-number">04</div>
+          <div class="process-icon"><i data-lucide="rocket" color="#d62839" stroke-width="1.5"></i></div>
+          <h3>Entrega</h3>
+          <p>Recibes todos los archivos en formatos profesionales, listos para imprimir o publicar.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       TESTIMONIALS SECTION
+       ======================================== -->
+  <section class="section" id="testimonials">
+    <div class="container">
+      <div class="animate-on-scroll">
+        <span class="section-label">Testimonios</span>
+        <h2 class="section-title">Lo que dicen mis <span class="gradient-text">clientes</span></h2>
+        <p class="section-subtitle">La satisfacción de mis clientes es mi mejor carta de presentación.</p>
+      </div>
+
+      <div class="testimonials-grid">
+        <div class="testimonial-card glass glass-hover animate-on-scroll delay-1">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"Excelente trabajo, superó mis expectativas. El logo quedó increíble y la identidad visual de mi marca ahora es profesional. 100% recomendado."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">MC</div>
+            <div>
+              <h4>María C.</h4>
+              <span>Emprendedora, FitPro</span>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card glass glass-hover animate-on-scroll delay-2">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"Rápido, creativo y con una atención al detalle impresionante. Los flyers para mi evento fueron un éxito total. Definitivamente volveré."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">JP</div>
+            <div>
+              <h4>José P.</h4>
+              <span>Director, Zenith Festival</span>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card glass glass-hover animate-on-scroll delay-3">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"La mejor inversión para mi negocio. Mis redes sociales pasaron de 0 engagement a recibir mensajes diarios gracias al contenido visual de ArtKing47."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">LR</div>
+            <div>
+              <h4>Laura R.</h4>
+              <span>CEO, Prism Records</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       FAQ SECTION
+       ======================================== -->
+  <section class="section" id="faq">
+    <div class="container">
+      <div class="animate-on-scroll">
+        <span class="section-label">FAQ</span>
+        <h2 class="section-title">Preguntas <span class="gradient-text">frecuentes</span></h2>
+      </div>
+
+      <div class="faq-list">
+        <div class="faq-item glass animate-on-scroll delay-1">
+          <button class="faq-question" aria-expanded="false">
+            <span>¿Cuánto cobra por un logo profesional?</span>
+            <i data-lucide="chevron-down" class="faq-chevron"></i>
+          </button>
+          <div class="faq-answer">
+            <p>El precio depende de la complejidad y el alcance del proyecto. Contáctame para una cotización personalizada según tus necesidades específicas.</p>
+          </div>
+        </div>
+        <div class="faq-item glass animate-on-scroll delay-2">
+          <button class="faq-question" aria-expanded="false">
+            <span>¿Cuáles son los tiempos de entrega?</span>
+            <i data-lucide="chevron-down" class="faq-chevron"></i>
+          </button>
+          <div class="faq-answer">
+            <p>Generalmente entre 3-7 días hábiles para la primera propuesta, dependiendo del proyecto. Trabajos urgentes tienen un recargo adicional.</p>
+          </div>
+        </div>
+        <div class="faq-item glass animate-on-scroll delay-3">
+          <button class="faq-question" aria-expanded="false">
+            <span>¿En qué formatos entrega los archivos?</span>
+            <i data-lucide="chevron-down" class="faq-chevron"></i>
+          </button>
+          <div class="faq-answer">
+            <p>Entrego en todos los formatos necesarios: AI, PSD, PDF, PNG, JPG, SVG y más. Archivos listos para impresión y digital.</p>
+          </div>
+        </div>
+        <div class="faq-item glass animate-on-scroll delay-4">
+          <button class="faq-question" aria-expanded="false">
+            <span>¿Incluye revisiones?</span>
+            <i data-lucide="chevron-down" class="faq-chevron"></i>
+          </button>
+          <div class="faq-answer">
+            <p>Sí, cada proyecto incluye rondas de revisiones para asegurar que el resultado final sea exactamente lo que necesitas.</p>
+          </div>
+        </div>
+        <div class="faq-item glass animate-on-scroll delay-5">
+          <button class="faq-question" aria-expanded="false">
+            <span>¿Trabaja con clientes internacionales?</span>
+            <i data-lucide="chevron-down" class="faq-chevron"></i>
+          </button>
+          <div class="faq-answer">
+            <p>¡Por supuesto! Trabajo con clientes de todo el mundo. La comunicación es por WhatsApp, email o videollamada.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       FOOTER
+       ======================================== -->
+  <footer class="footer">
+    <div class="container">
+      <p class="footer-copy">&copy; 2026 ArtKing47. Todos los derechos reservados.</p>
+      <div class="footer-links">
+        <a href="#about">Sobre Mí</a>
+        <a href="#portfolio">Portfolio</a>
+        <a href="#services">Servicios</a>
+        <a href="#contact">Contacto</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <!-- Firebase SDK (read-only for landing page) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="script.js?v=5"></script>
+</body>
+
+</html>
