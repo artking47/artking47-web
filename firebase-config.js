@@ -37,12 +37,13 @@ function initFirebase() {
         }
 
         db = firebase.firestore();
-        // Storage not available on Spark plan — skip init if not loaded
-        try { storage = firebase.storage(); } catch(e) { storage = null; }
-        auth = firebase.auth();
-        firebaseReady = true;
 
-        console.log('[Firebase] ✅ Initialized successfully');
+        // Auth & Storage are optional — only loaded on admin page
+        try { auth = firebase.auth(); } catch(e) { auth = null; }
+        try { storage = firebase.storage(); } catch(e) { storage = null; }
+
+        firebaseReady = true;
+        console.log('[Firebase] ✅ Initialized (db=' + !!db + ', auth=' + !!auth + ')');
         return true;
     } catch (error) {
         console.error('[Firebase] ❌ Initialization failed:', error);
