@@ -1,6 +1,6 @@
 /* ============================================
    FIREBASE CONFIGURATION — ArtKing47
-   Firestore + Storage + Auth
+   Firestore + Auth (Multi-document architecture)
    ============================================ */
 
 // Firebase CDN modules are loaded via <script> tags in HTML.
@@ -25,13 +25,11 @@ let firebaseReady = false;
 
 function initFirebase() {
     try {
-        // Check if Firebase SDK is loaded
         if (typeof firebase === 'undefined') {
             console.warn('[Firebase] SDK not loaded, falling back to localStorage');
             return false;
         }
 
-        // Initialize app (prevent double init)
         if (!firebase.apps.length) {
             firebaseApp = firebase.initializeApp(firebaseConfig);
         } else {
@@ -39,7 +37,8 @@ function initFirebase() {
         }
 
         db = firebase.firestore();
-        storage = firebase.storage();
+        // Storage not available on Spark plan — skip init if not loaded
+        try { storage = firebase.storage(); } catch(e) { storage = null; }
         auth = firebase.auth();
         firebaseReady = true;
 
@@ -53,23 +52,60 @@ function initFirebase() {
 }
 
 // ============================================
-// FIRESTORE — Read / Write Site Data
+// FIRESTORE — Multi-document Read / Write
 // ============================================
-const FIRESTORE_DOC = 'artking47_site/config';
+// Cada sección se guarda en su PROPIO documento para evitar
+// el límite de 1MB por documento de Firestore.
+// Las imágenes base64 van en documentos separados.
+
+const FIRESTORE_COLLECTION = 'artking47_site';
+
+// Sections that get their own Firestore document
+const FIRESTORE_SECTIONS = [
+    'general', 'hero', 'about', 'portfolio',
+    'services', 'testimonials', 'process', 'faq',
+    'contact', 'config'
+];
 
 /**
- * Load all site data from Firestore.
- * Falls back to DEFAULTS if no data exists.
- * @returns {Promise<Object|null>} site data or null on error
+ * Load ALL site data from Firestore (multi-document).
+ * Reads each section from its own document and merges them.
+ * @returns {Promise<Object|null>} merged site data or null
  */
 async function firebaseLoadSiteData() {
     if (!firebaseReady || !db) return null;
 
     try {
-        const doc = await db.doc(FIRESTORE_DOC).get();
-        if (doc.exists) {
-            console.log('[Firebase] ✅ Data loaded from Firestore');
-            return doc.data();
+        // Read all section documents in parallel
+        const promises = FIRESTORE_SECTIONS.map(section =>
+            db.collection(FIRESTORE_COLLECTION).doc(section).get()
+        );
+        const snapshots = await Promise.all(promises);
+
+        let hasData = false;
+        const merged = {};
+
+        snapshots.forEach((snap, i) => {
+            const section = FIRESTORE_SECTIONS[i];
+            if (snap.exists) {
+                const docData = snap.data();
+                // Remove Firestore metadata
+                delete docData._lastModified;
+                delete docData._section;
+
+                // For array sections, the data is stored under 'items' key
+                if (docData.items && Array.isArray(docData.items)) {
+                    merged[section] = docData.items;
+                } else {
+                    merged[section] = docData;
+                }
+                hasData = true;
+            }
+        });
+
+        if (hasData) {
+            console.log('[Firebase] ✅ Data loaded from Firestore (multi-doc)');
+            return merged;
         } else {
             console.log('[Firebase] No data in Firestore yet, using defaults');
             return null;
@@ -81,7 +117,8 @@ async function firebaseLoadSiteData() {
 }
 
 /**
- * Save all site data to Firestore.
+ * Save ALL site data to Firestore (multi-document).
+ * Each section is saved as its own document to stay under 1MB limit.
  * @param {Object} data — the siteData object
  * @returns {Promise<boolean>} success
  */
@@ -89,83 +126,74 @@ async function firebaseSaveSiteData(data) {
     if (!firebaseReady || !db) return false;
 
     try {
-        // Clean data — remove base64 images (they go to Storage)
-        const cleanData = JSON.parse(JSON.stringify(data));
+        const batch = db.batch();
+        const timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
-        // Add metadata
-        cleanData._lastModified = firebase.firestore.FieldValue.serverTimestamp();
-        cleanData._version = '2.0';
+        FIRESTORE_SECTIONS.forEach(section => {
+            if (data[section] === undefined) return;
 
-        await db.doc(FIRESTORE_DOC).set(cleanData, { merge: true });
-        console.log('[Firebase] ✅ Data saved to Firestore');
+            const docRef = db.collection(FIRESTORE_COLLECTION).doc(section);
+            let docData;
+
+            // Arrays get wrapped in { items: [...] } because Firestore
+            // documents must be objects, not arrays
+            if (Array.isArray(data[section])) {
+                docData = {
+                    items: data[section],
+                    _section: section,
+                    _lastModified: timestamp
+                };
+            } else {
+                docData = {
+                    ...data[section],
+                    _section: section,
+                    _lastModified: timestamp
+                };
+            }
+
+            batch.set(docRef, docData);
+        });
+
+        await batch.commit();
+        console.log('[Firebase] ✅ Data saved to Firestore (multi-doc, ' + FIRESTORE_SECTIONS.length + ' docs)');
         return true;
     } catch (error) {
         console.error('[Firebase] ❌ Error saving data:', error);
-        return false;
-    }
-}
 
-// ============================================
-// FIREBASE STORAGE — Image Upload / Delete
-// ============================================
+        // If batch fails, try saving sections individually
+        // (in case ONE section is too large)
+        console.log('[Firebase] Retrying individual section saves...');
+        let savedCount = 0;
 
-/**
- * Upload an image file to Firebase Storage.
- * @param {File} file — the image file
- * @param {string} path — storage path (e.g., 'portfolio/project-1/img-0')
- * @returns {Promise<string|null>} download URL or null on error
- */
-async function firebaseUploadImage(file, path) {
-    if (!firebaseReady || !storage) return null;
+        for (const section of FIRESTORE_SECTIONS) {
+            if (data[section] === undefined) continue;
+            try {
+                const docRef = db.collection(FIRESTORE_COLLECTION).doc(section);
+                let docData;
 
-    try {
-        const storageRef = storage.ref(path);
-        const snapshot = await storageRef.put(file);
-        const downloadURL = await snapshot.ref.getDownloadURL();
-        console.log(`[Firebase Storage] ✅ Uploaded: ${path}`);
-        return downloadURL;
-    } catch (error) {
-        console.error('[Firebase Storage] ❌ Upload error:', error);
-        return null;
-    }
-}
+                if (Array.isArray(data[section])) {
+                    docData = {
+                        items: data[section],
+                        _section: section,
+                        _lastModified: firebase.firestore.FieldValue.serverTimestamp()
+                    };
+                } else {
+                    docData = {
+                        ...data[section],
+                        _section: section,
+                        _lastModified: firebase.firestore.FieldValue.serverTimestamp()
+                    };
+                }
 
-/**
- * Delete an image from Firebase Storage.
- * @param {string} path — storage path
- * @returns {Promise<boolean>} success
- */
-async function firebaseDeleteImage(path) {
-    if (!firebaseReady || !storage) return false;
+                await docRef.set(docData);
+                savedCount++;
+                console.log(`[Firebase] ✅ Saved section: ${section}`);
+            } catch (sectionErr) {
+                console.error(`[Firebase] ❌ Failed to save section: ${section}`, sectionErr.message);
+            }
+        }
 
-    try {
-        await storage.ref(path).delete();
-        console.log(`[Firebase Storage] ✅ Deleted: ${path}`);
-        return true;
-    } catch (error) {
-        console.warn('[Firebase Storage] Delete error (may not exist):', error.code);
-        return false;
-    }
-}
-
-/**
- * Upload a base64 data URL to Firebase Storage and return the download URL.
- * @param {string} dataUrl — base64 data URL
- * @param {string} path — storage path
- * @returns {Promise<string|null>} download URL or null
- */
-async function firebaseUploadBase64(dataUrl, path) {
-    if (!firebaseReady || !storage) return null;
-
-    try {
-        const storageRef = storage.ref(path);
-        const snapshot = await storageRef.putString(dataUrl, 'data_url');
-        const downloadURL = await snapshot.ref.getDownloadURL();
-        console.log(`[Firebase Storage] ✅ Base64 uploaded: ${path}`);
-        return downloadURL;
-    } catch (error) {
-        console.error('[Firebase Storage] ❌ Base64 upload error:', error);
-        return null;
+        return savedCount > 0;
     }
 }
 
@@ -175,9 +203,6 @@ async function firebaseUploadBase64(dataUrl, path) {
 
 /**
  * Sign in admin with email/password.
- * @param {string} email
- * @param {string} password
- * @returns {Promise<{success: boolean, error?: string}>}
  */
 async function firebaseLogin(email, password) {
     if (!firebaseReady || !auth) {
@@ -216,7 +241,6 @@ async function firebaseLogout() {
 
 /**
  * Check if admin is currently authenticated.
- * @returns {Promise<boolean>}
  */
 function firebaseIsAuthenticated() {
     if (!firebaseReady || !auth) return false;
@@ -225,7 +249,6 @@ function firebaseIsAuthenticated() {
 
 /**
  * Listen to auth state changes.
- * @param {Function} callback — receives (user) or (null)
  */
 function firebaseOnAuthStateChanged(callback) {
     if (!firebaseReady || !auth) return;
