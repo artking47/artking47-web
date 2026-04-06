@@ -90,22 +90,37 @@ async function firebaseLoadSiteData() {
             const section = FIRESTORE_SECTIONS[i];
             if (snap.exists) {
                 const docData = snap.data();
+                
+                // DEBUG: Log raw data from each Firestore doc
+                const keys = Object.keys(docData).filter(k => k !== '_lastModified' && k !== '_section');
+                console.log(`[Firebase] 📄 ${section}: keys=[${keys.join(',')}]`);
+                
                 // Remove Firestore metadata
                 delete docData._lastModified;
                 delete docData._section;
 
                 // For array sections, the data is stored under 'items' key
                 if (docData.items && Array.isArray(docData.items)) {
+                    console.log(`[Firebase] 📄 ${section}: ${docData.items.length} items, sample keys: [${docData.items[0] ? Object.keys(docData.items[0]).join(',') : 'empty'}]`);
                     merged[section] = docData.items;
                 } else {
                     merged[section] = docData;
                 }
                 hasData = true;
+            } else {
+                console.log(`[Firebase] 📄 ${section}: NOT FOUND in Firestore`);
             }
         });
 
         if (hasData) {
             console.log('[Firebase] ✅ Data loaded from Firestore (multi-doc)');
+            // DEBUG: log portfolio sample
+            if (merged.portfolio && merged.portfolio[0]) {
+                console.log('[Firebase] 🔍 Portfolio[0]:', JSON.stringify(merged.portfolio[0]).substring(0, 200));
+            }
+            if (merged.services && merged.services[0]) {
+                console.log('[Firebase] 🔍 Services[0]:', JSON.stringify(merged.services[0]).substring(0, 200));
+            }
             return merged;
         } else {
             console.log('[Firebase] No data in Firestore yet, using defaults');
