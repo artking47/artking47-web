@@ -466,6 +466,17 @@ document.addEventListener('DOMContentLoaded', () => {
     await loadContentFromStorage();
     // Re-render Lucide after dynamic Firebase content
     if (typeof lucide !== 'undefined') lucide.createIcons();
+
+    // CRITICAL: Re-observe new elements created by Firebase data
+    // The initial observer runs before async data loads,
+    // so dynamically created cards never get the 'visible' class.
+    document.querySelectorAll('.animate-on-scroll:not(.visible)').forEach(el => {
+      if (typeof _scrollObserver !== 'undefined') _scrollObserver.observe(el);
+    });
+
+    // Re-initialize hero slideshow (slides may have changed from Firebase)
+    heroSlides = document.querySelectorAll('.hero-slide');
+    statNumbers = document.querySelectorAll('.stat-number[data-count]');
   })();
 
   // Render Lucide icons (initial pass)
@@ -606,7 +617,8 @@ document.addEventListener('DOMContentLoaded', () => {
     threshold: 0.08
   };
 
-  const observer = new IntersectionObserver((entries) => {
+  // Hoisted to outer scope so async Firebase loader can re-observe new elements
+  const _scrollObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('visible');
@@ -614,12 +626,12 @@ document.addEventListener('DOMContentLoaded', () => {
         entry.target.addEventListener('transitionend', () => {
           entry.target.style.willChange = 'auto';
         }, { once: true });
-        observer.unobserve(entry.target);
+        _scrollObserver.unobserve(entry.target);
       }
     });
   }, observerOptions);
 
-  animatedElements.forEach(el => observer.observe(el));
+  animatedElements.forEach(el => _scrollObserver.observe(el));
 
   // ============================================
   // STAT COUNTER — Animated numbers
