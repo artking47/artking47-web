@@ -13,6 +13,17 @@ document.addEventListener('DOMContentLoaded', () => {
   let statNumbers = document.querySelectorAll('.stat-number[data-count]');
   const contactForm = document.getElementById('contactForm');
 
+  // Custom Brutalist Cursor
+  const cursor = document.querySelector('.custom-cursor');
+  if (cursor) {
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
+    document.addEventListener('mousedown', () => cursor.classList.add('active'));
+    document.addEventListener('mouseup', () => cursor.classList.remove('active'));
+  }
+
   // ============================================
   // SECURITY — Sanitization Utilities
   // ============================================
@@ -196,31 +207,35 @@ document.addEventListener('DOMContentLoaded', () => {
     if (data.about) {
       const a = data.about;
       // Avatar — validate image data URL
-      const avatarEl = document.querySelector('.about-avatar');
-      const placeholderEl = document.querySelector('.about-image-placeholder');
-      if (placeholderEl && a.avatarImage && isValidDataURL(a.avatarImage)) {
-        placeholderEl.classList.add('has-photo');
+      const avatarFallback = document.querySelector('.avatar-fallback');
+      const avatarContainer = document.querySelector('.hero-avatar');
+      
+      if (avatarContainer && a.avatarImage && isValidDataURL(a.avatarImage)) {
+        // Remove mesh background if we have a real photo
+        avatarContainer.classList.remove('bg-mesh-gradient');
         const img = document.createElement('img');
         img.src = a.avatarImage;
         img.alt = 'Avatar';
-        placeholderEl.innerHTML = '';
-        placeholderEl.appendChild(img);
-      } else if (avatarEl && a.avatarInitials) {
-        avatarEl.textContent = sanitize(a.avatarInitials).substring(0, 3);
+        img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+        avatarContainer.innerHTML = '';
+        avatarContainer.appendChild(img);
+      } else if (avatarFallback && a.avatarInitials) {
+        avatarFallback.textContent = sanitize(a.avatarInitials).substring(0, 3);
       }
-      // Bio
-      const bioParas = document.querySelectorAll('.about-text .animate-on-scroll.delay-1 p');
-      if (bioParas.length >= 2) {
-        if (a.bio1) bioParas[0].textContent = a.bio1;
-        if (a.bio2) bioParas[1].textContent = a.bio2;
+      // Bio (Now just setting the global hero descriptions if we want, but they are static or global in Bento) 
+      // Bento simplifies the bio into the hero-description
+      const heroDesc = document.querySelector('.hero-description');
+      if (heroDesc) {
+         if (a.bio1) heroDesc.textContent = a.bio1;
       }
+      
       // Stats
       if (a.stats && a.stats.length >= 3) {
-        const statItems = document.querySelectorAll('.stat-item');
+        const statCols = document.querySelectorAll('.stat-col');
         a.stats.forEach((stat, i) => {
-          if (statItems[i]) {
-            const numEl = statItems[i].querySelector('.stat-number');
-            const labelEl = statItems[i].querySelector('.stat-label');
+          if (statCols[i]) {
+            const numEl = statCols[i].querySelector('.stat-number');
+            const labelEl = statCols[i].querySelector('.stat-label');
             if (numEl) { numEl.setAttribute('data-count', stat.number); numEl.textContent = '0'; }
             if (labelEl) labelEl.textContent = stat.label;
           }
@@ -244,8 +259,10 @@ document.addEventListener('DOMContentLoaded', () => {
           // Backwards compatibility: migrate single image to images array
           const images = project.images || (project.image ? [project.image] : []);
           const delay = (i % 3) + 1;
+          const isFeatured = i === 0 || i === 3;
+          const sizeClass = isFeatured ? 'bento-large-card' : '';
           const card = document.createElement('div');
-          card.className = `portfolio-card glass glass-hover animate-on-scroll delay-${delay}`;
+          card.className = `portfolio-card glass-card animate-on-scroll delay-${delay} ${sizeClass}`;
           card.style.cursor = 'pointer';
           card.setAttribute('data-project-index', i);
 
@@ -305,8 +322,10 @@ document.addEventListener('DOMContentLoaded', () => {
         data.services.forEach((service, i) => {
           const delay = (i % 5) + 1;
           const iconName = iconNames[i % iconNames.length];
+          const isWide = i === 0 || i === 3;
+          const sizeClass = isWide ? 'bento-wide-card' : '';
           const card = document.createElement('div');
-          card.className = `service-card glass glass-hover animate-on-scroll delay-${delay}`;
+          card.className = `service-card glass-card animate-on-scroll delay-${delay} ${sizeClass}`;
           card.innerHTML = `
             <div class="service-icon"><i data-lucide="${iconName}" color="#d62839" stroke-width="1.5"></i></div>
             <h3 class="service-name">${sanitize(service.name)}</h3>
